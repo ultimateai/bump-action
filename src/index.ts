@@ -51,19 +51,28 @@ const start = async () => {
             generate_release_notes: false
         })
         
-        githubChangeRemoteFile({
-            user: repoDetails.repoOwner,
-            repo: repoDetails.repoName,
-            filename: 'package.json',
-            transform: (pkg: string) => {
-              const parsedPkg = JSON.parse(pkg)
-              parsedPkg.version = nextReleaseTag
-              return JSON.stringify(parsedPkg, null, 2)
-            },
-            token: core.getInput('github_token')
-          })
-          .then((res: string) => console.log(res))
-          .catch(console.log)
+        if(core.getInput('update_file')){
+            console.log("A file will be updated according to the bumped release")
+            switch(core.getInput('update_file')){
+                case "package.json":
+                    githubChangeRemoteFile({
+                        user: repoDetails.repoOwner,
+                        repo: repoDetails.repoName,
+                        filename: 'package.json',
+                        transform: (pkg: string) => {
+                          const parsedPkg = JSON.parse(pkg)
+                          parsedPkg.version = nextReleaseTag
+                          return JSON.stringify(parsedPkg, null, 2)
+                        },
+                        token: core.getInput('github_token')
+                      })
+                      .then((res: string) => console.log(res))
+                      .catch(console.log)
+                default:
+                    console.log("Your desired update file is not within the accepted options")
+            }
+        }
+        
 
         console.log('releaseResult', releaseResult)
     } catch (error: any) {

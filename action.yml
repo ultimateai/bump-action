@@ -5,7 +5,7 @@ inputs:
     description: 'Secret GitHub token'
     required: true
   tag_prefix:
-    description: 'A prefix to add to the tag, defaults to "v"'
+    description: 'A prefix to add to the tag, defaults to empty'
     required: false
     default: ''
   bump:
@@ -13,6 +13,9 @@ inputs:
     required: false
   infer_bump_from_commit:
     description: 'If set to true, looks for major, minor, patch in the commit in order to determine the bump.'
+    required: false
+  update_file:
+    description: 'Choose the file you want to update'
     required: false
 
 outputs:
