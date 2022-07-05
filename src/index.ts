@@ -55,7 +55,7 @@ const start = async () => {
         console.log("Just before the if")
         if(core.getInput('update_file')){
             console.log("A file will be updated according to the bumped release")
-            switch(core.getInput('update_file')){
+            switch(core.getInput('update_file').trim()){
                 case "package.json":
                     githubChangeRemoteFile({
                         user: repoDetails.repoOwner,
@@ -70,6 +70,7 @@ const start = async () => {
                       })
                       .then((res: string) => console.log(res))
                       .catch(console.log)
+                      break
                 default:
                     console.log("Your desired update file is not within the accepted options")
             }
