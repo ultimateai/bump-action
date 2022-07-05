@@ -2010,6 +2010,11 @@
   dependencies:
     "brace-expansion" "^1.1.7"
 
+"minimist@^1.2.5":
+  "integrity" "sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q=="
+  "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.6.tgz"
+  "version" "1.2.6"
+
 "ms@2.0.0":
   "integrity" "sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A=="
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
@@ -2046,6 +2051,13 @@
   "integrity" "sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA=="
   "resolved" "https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz"
   "version" "3.0.0"
+
+"npm-prepare-dist@^0.4.0":
+  "integrity" "sha512-fTXpYuPKBj9pFiXrCdFz3kGR/+O0J8fWHCt+fVuoUNQq4gHUeAZvluOtYY4CKB2/aeqaY06wvJ0/hF3tAKqAqA=="
+  "resolved" "https://registry.npmjs.org/npm-prepare-dist/-/npm-prepare-dist-0.4.0.tgz"
+  "version" "0.4.0"
+  dependencies:
+    "minimist" "^1.2.5"
 
 "npm-run-path@^4.0.1":
   "integrity" "sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw=="
@@ -2231,12 +2243,17 @@
   "resolved" "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
   "version" "5.1.2"
 
-"semver@^6.0.0", "semver@^6.3.0":
+"semver@^6.0.0":
   "integrity" "sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz"
   "version" "6.3.0"
 
-"semver@^7.3.5":
+"semver@^6.3.0":
+  "integrity" "sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw=="
+  "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz"
+  "version" "6.3.0"
+
+"semver@^7.3.5", "semver@^7.3.7", "semver@7.x":
   "integrity" "sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-7.3.7.tgz"
   "version" "7.3.7"
@@ -2247,13 +2264,6 @@
   "integrity" "sha512-5OkOBiw69xqmxOFIXwXsiY1HlE+om8nNptg1ZIf95fzcnfgOv2fLm7pmmGbRJsjJIqPpW5Kwy4wpDBTz5wQlUw=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-5.0.3.tgz"
   "version" "5.0.3"
-
-"semver@7.x":
-  "integrity" "sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g=="
-  "resolved" "https://registry.npmjs.org/semver/-/semver-7.3.7.tgz"
-  "version" "7.3.7"
-  dependencies:
-    "lru-cache" "^6.0.0"
 
 "shebang-command@^2.0.0":
   "integrity" "sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA=="
