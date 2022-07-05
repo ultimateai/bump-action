@@ -3,10 +3,13 @@ import type {Bump} from "./bump";
 
 const core = require('@actions/core')
 const github = require('@actions/github');
+const githubChangeRemoteFile = require("github-change-remote-file")
+const semver = require("semver")
 
 import commitMessageQuery from 'inline!./src/GetCommitMessageFromRepository.query.graphql'
 import lastReleaseQuery from 'inline!./src/GetLastReleaseQuery.query.graphql'
 import type {CommitMessageQueryResponse, LatestReleaseQueryResponse} from "./QueryTypes";
+import { parse } from "path";
 
 const repoDetails = {
     repoName: github.context.repo.repo,
@@ -47,6 +50,20 @@ const start = async () => {
             prerelease: false,
             generate_release_notes: false
         })
+        
+        githubChangeRemoteFile({
+            user: repoDetails.repoOwner,
+            repo: repoDetails.repoName,
+            filename: 'package.json',
+            transform: (pkg: any) => {
+              const parsedPkg = JSON.parse(pkg)
+              parsedPkg.version = nextReleaseTag
+              return JSON.stringify(parsedPkg, null, 2)
+            },
+            token: core.getInput('github_token')
+          })
+          .then((res: any) => console.log(res))
+          .catch(console.log)
 
         console.log('releaseResult', releaseResult)
     } catch (error: any) {

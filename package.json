@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "GitHub Action to bump SemVer and then create a Release ",
   "main": "index.js",
-  "repository": "git@github.com:amiiit/merge-bump-release.git",
-  "author": "Amit Jakubowicz <amit.jakubowicz@ultimate.ai>",
+  "repository": "https://github.com/ultimateai/bump-action",
+  "author": "Ultimate",
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -20,7 +20,9 @@
     "@actions/github": "^5.0.0",
     "@octokit/graphql": "^4.8.0",
     "graphql": "^16.5.0",
-    "graphql-tag": "^2.12.6"
+    "graphql-tag": "^2.12.6",
+    "github-change-remote-file":"^4.2.0",
+    "semver": "^7.3.7"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.3.0",
