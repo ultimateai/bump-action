@@ -55,14 +55,14 @@ const start = async () => {
             user: repoDetails.repoOwner,
             repo: repoDetails.repoName,
             filename: 'package.json',
-            transform: (pkg: any) => {
+            transform: (pkg: string) => {
               const parsedPkg = JSON.parse(pkg)
               parsedPkg.version = nextReleaseTag
               return JSON.stringify(parsedPkg, null, 2)
             },
             token: core.getInput('github_token')
           })
-          .then((res: any) => console.log(res))
+          .then((res: string) => console.log(res))
           .catch(console.log)
 
         console.log('releaseResult', releaseResult)
