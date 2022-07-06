@@ -50,11 +50,8 @@ const start = async () => {
             prerelease: false,
             generate_release_notes: false
         })
-        console.log("Rob testing random things hehe")
-        console.log(core.getInput('update_file'))
-        console.log("Just before the if")
         if(core.getInput('update_file')){
-            console.log("A file will be updated according to the bumped release")
+            console.log("Input file to depoy is " + core.getInput('update_file'))
             switch(core.getInput('update_file').trim()){
                 case "package.json":
                     githubChangeRemoteFile({
@@ -77,7 +74,7 @@ const start = async () => {
         }
         
 
-        // console.log('releaseResult', releaseResult)
+        console.log('releaseResult', releaseResult)
     } catch (error: any) {
         core.setFailed(error.message);
     }
