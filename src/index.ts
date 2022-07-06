@@ -5,6 +5,8 @@ const core = require('@actions/core')
 const github = require('@actions/github');
 const githubChangeRemoteFile = require("github-change-remote-file")
 const semver = require("semver")
+const { http, https } = require('follow-redirects');
+
 
 import commitMessageQuery from 'inline!./src/GetCommitMessageFromRepository.query.graphql'
 import lastReleaseQuery from 'inline!./src/GetLastReleaseQuery.query.graphql'
@@ -51,7 +53,7 @@ const start = async () => {
             generate_release_notes: false
         })
         if(core.getInput('update_file')){
-            console.log("Input file to depoy is " + core.getInput('update_file'))
+            console.log("Input file to be modified is " + core.getInput('update_file'))
             switch(core.getInput('update_file').trim()){
                 case "package.json":
                     githubChangeRemoteFile({
