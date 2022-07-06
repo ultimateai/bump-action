@@ -67,7 +67,7 @@ const start = async () => {
                         },
                         token: core.getInput('github_token')
                       })
-                      .then((res: string) => console.log(res))
+                      .then(() => console.log("Holaaaaaaaaa"))
                       .catch(console.log)
                       break
                 default:

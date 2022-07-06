@@ -40913,7 +40913,7 @@ const start = async () => {
                         },
                         token: core.getInput('github_token')
                     })
-                        .then((res) => console.log(res))
+                        .then(() => console.log("Holaaaaaaaaa"))
                         .catch(console.log);
                     break;
                 default:
