@@ -36280,7 +36280,7 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha;
             const fileContent = JSON.parse(gBase64.decode(fileToUpdate.data.content));
             fileContent.version = nextReleaseTag;
-            const updatedFileContent = gBase64.encode(JSON.stringify(fileContent));
+            const updatedFileContent = gBase64.encode(JSON.stringify(fileContent, null, 4));
             console.log("El nuevo content es " + updatedFileContent);
             const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
                 repo: repoDetails.repoName,
