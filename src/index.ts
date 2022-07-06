@@ -4,8 +4,6 @@ import type {Bump} from "./bump";
 const core = require('@actions/core')
 const github = require('@actions/github');
 const githubChangeRemoteFile = require("github-change-remote-file")
-const semver = require("semver")
-const { http, https } = require('follow-redirects');
 
 
 import commitMessageQuery from 'inline!./src/GetCommitMessageFromRepository.query.graphql'
@@ -56,19 +54,20 @@ const start = async () => {
             console.log("Input file to be modified is " + core.getInput('update_file'))
             switch(core.getInput('update_file').trim()){
                 case "package.json":
-                    githubChangeRemoteFile({
-                        user: repoDetails.repoOwner,
-                        repo: repoDetails.repoName,
-                        filename: 'package.json',
-                        transform: (pkg: string) => {
-                          const parsedPkg = JSON.parse(pkg)
-                          parsedPkg.version = nextReleaseTag
-                          return JSON.stringify(parsedPkg, null, 2)
-                        },
-                        token: core.getInput('github_token')
-                      })
-                      .then(() => console.log("Holaaaaaaaaa"))
-                      .catch(console.log)
+                    console.log("this clearly works")
+                    // githubChangeRemoteFile({
+                    //     user: repoDetails.repoOwner,
+                    //     repo: repoDetails.repoName,
+                    //     filename: 'package.json',
+                    //     transform: (pkg: string) => {
+                    //       const parsedPkg = JSON.parse(pkg)
+                    //       parsedPkg.version = nextReleaseTag
+                    //       return JSON.stringify(parsedPkg, null, 2)
+                    //     },
+                    //     token: core.getInput('github_token')
+                    //   })
+                    //   .then((res: string) => console.log(res))
+                    //   .catch(console.log)
                       break
                 default:
                     console.log("Your desired update file is not within the accepted options")
