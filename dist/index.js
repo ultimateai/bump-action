@@ -36237,6 +36237,7 @@ __nccwpck_require__(6580);
 const repoDetails = {
     repoName: github.context.repo.repo,
     repoOwner: github.context.repo.owner,
+    changelogFile: "CHANGELOG.md"
 };
 const start = async () => {
     try {
@@ -36270,27 +36271,50 @@ const start = async () => {
         // console.log('releaseResult', releaseResult)
         if (core.getInput('update_file')) {
             console.log("Input file to be modified is " + core.getInput('update_file'));
-            // Clone repo 
-            console.log("this clearly works");
-            const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+            if (core.getInput('update_file') == "package.json") {
+                const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    branch: "main"
+                });
+                const fileSha = fileToUpdate.data.sha;
+                const fileContent = JSON.parse(gBase64.decode(fileToUpdate.data.content));
+                fileContent.version = nextReleaseTag;
+                const updatedFileContent = gBase64.encode(JSON.stringify(fileContent, null, 4));
+                const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    message: `Automatic file bump to ${nextReleaseTag}`,
+                    branch: "main",
+                    sha: fileSha,
+                    content: updatedFileContent
+                });
+            }
+            else if (core.getInput('update_file') == "version.txt") {
+                console.log("version.txt is not yet supported, sorry!");
+            }
+            else {
+                console.log("Your input file is not registered yet");
+            }
+        }
+        if (core.getInput('changelog')) {
+            console.log("Input file to be modified is " + repoDetails.changelogFile);
+            const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
                 branch: "main"
             });
             const fileSha = fileToUpdate.data.sha;
-            const fileContent = JSON.parse(gBase64.decode(fileToUpdate.data.content));
-            fileContent.version = nextReleaseTag;
-            const updatedFileContent = gBase64.encode(JSON.stringify(fileContent, null, 4));
-            console.log("El nuevo content es " + updatedFileContent);
-            const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
-                repo: repoDetails.repoName,
-                owner: repoDetails.repoOwner,
-                message: "ci update",
-                branch: "main",
-                sha: fileSha,
-                content: updatedFileContent
-            });
-            console.log("packageJsonResult", packageJsonResult);
+            const fileContent = gBase64.decode(fileToUpdate.data.content);
+            console.log("changelog.md", fileContent);
+            // const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
+            //     repo: repoDetails.repoName,
+            //     owner: repoDetails.repoOwner,
+            //     message: `Automatic file bump to ${nextReleaseTag}`,
+            //     branch: "main",
+            //     sha: fileSha,
+            //     content: updatedFileContent
+            // })           
         }
     }
     catch (error) {
