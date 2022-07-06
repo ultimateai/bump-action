@@ -36278,37 +36278,19 @@ const start = async () => {
                 branch: "main"
             });
             const fileSha = fileToUpdate.data.sha;
-            const fileContent = gBase64.decode(fileToUpdate.data.content);
-            console.log("File content en string es " + fileContent);
-            const fileContentJson = JSON.parse(fileContent);
-            console.log("File content en JSON es " + fileContentJson);
-            console.log("Puedo sacar la version asi " + fileContentJson.version);
-            fileContentJson.version = nextReleaseTag;
-            console.log("Version modificada " + fileContentJson.version);
-            console.log('Sha', fileSha);
-            console.log('TODO EL CONTENIDO POR SI ACASO', fileToUpdate);
-            // const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
-            //     repo: repoDetails.repoName,
-            //     owner: repoDetails.repoOwner,
-            //     message: "ci update",
-            //     branch: "main",
-            //     sha: fileSha,
-            //     content: "test"
-            // })
-            // console.log('packageJsonUpdateResult', packageJsonResult)
-            // githubChangeRemoteFile({
-            //     user: repoDetails.repoOwner,
-            //     repo: repoDetails.repoName,
-            //     filename: 'package.json',
-            //     transform: (pkg: string) => {
-            //       const parsedPkg = JSON.parse(pkg)
-            //       parsedPkg.version = nextReleaseTag
-            //       return JSON.stringify(parsedPkg, null, 2)
-            //     },
-            //     token: core.getInput('github_token')
-            //   })
-            //   .then((res: string) => console.log(res))
-            //   .catch(console.log)
+            const fileContent = JSON.parse(gBase64.decode(fileToUpdate.data.content));
+            fileContent.version = nextReleaseTag;
+            const updatedFileContent = gBase64.encode(JSON.stringify(fileContent));
+            console.log("El nuevo content es " + updatedFileContent);
+            const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                repo: repoDetails.repoName,
+                owner: repoDetails.repoOwner,
+                message: "ci update",
+                branch: "main",
+                sha: fileSha,
+                content: updatedFileContent
+            });
+            console.log("packageJsonResult", packageJsonResult);
         }
     }
     catch (error) {
