@@ -17,6 +17,10 @@ inputs:
   update_file:
     description: 'Choose the file you want to update'
     required: false
+  changelog:
+    description: 'Update changelog'
+    required: false
+    default: true
 
 outputs:
   next_version: # id of output
