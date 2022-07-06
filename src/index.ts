@@ -4,6 +4,8 @@ import type {Bump} from "./bump";
 const core = require('@actions/core')
 const github = require('@actions/github');
 const githubChangeRemoteFile = require("github-change-remote-file")
+import { Base64 } from 'js-base64';
+
 
 
 import commitMessageQuery from 'inline!./src/GetCommitMessageFromRepository.query.graphql'
@@ -50,47 +52,51 @@ const start = async () => {
             prerelease: false,
             generate_release_notes: false
         })
+        // console.log('releaseResult', releaseResult)
         if(core.getInput('update_file')){
             console.log("Input file to be modified is " + core.getInput('update_file'))
             // Clone repo 
-            switch(core.getInput('update_file').trim()){
-                case "package.json":
-                    console.log("this clearly works")
-                    const getSha = await octokit.request('GET /repos/{owner}/{repo}/contents/package.json', {
-                        repo: repoDetails.repoName,
-                        owner: repoDetails.repoOwner,
-                        branch: "main"
-                    })
-                    console.log('getSha',getSha)
-                    const packageJsonResult = await octokit.request('PUT /repos/{owner}/{repo}/contents/package.json', {
-                        repo: repoDetails.repoName,
-                        owner: repoDetails.repoOwner,
-                        message: "ci update",
-                        branch: "main",
-                        content: "test"
-                    })
-                    console.log('packageJsonUpdateResult', packageJsonResult)
-                    // githubChangeRemoteFile({
-                    //     user: repoDetails.repoOwner,
-                    //     repo: repoDetails.repoName,
-                    //     filename: 'package.json',
-                    //     transform: (pkg: string) => {
-                    //       const parsedPkg = JSON.parse(pkg)
-                    //       parsedPkg.version = nextReleaseTag
-                    //       return JSON.stringify(parsedPkg, null, 2)
-                    //     },
-                    //     token: core.getInput('github_token')
-                    //   })
-                    //   .then((res: string) => console.log(res))
-                    //   .catch(console.log)
-                      break
-                default:
-                    console.log("Your desired update file is not within the accepted options")
-            }
-        }
-        
+            console.log("this clearly works")
+            const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                repo: repoDetails.repoName,
+                owner: repoDetails.repoOwner,
+                branch: "main"
+            })
+            const fileSha = fileToUpdate.data.sha
+            const fileContent = Base64.decode(fileToUpdate.data.content)
+            console.log("File content en string es " + fileContent)
+            const fileContentJson = JSON.parse(fileContent)
+            console.log("File content en JSON es " + fileContentJson)
+            console.log("Puedo sacar la version asi " + fileContentJson.version)
+            fileContentJson.version = nextReleaseTag
+            console.log("Version modificada " + fileContentJson.version)
+            console.log('Sha',fileSha)
 
-        console.log('releaseResult', releaseResult)
+            console.log('TODO EL CONTENIDO POR SI ACASO',fileToUpdate)
+            // const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+            //     repo: repoDetails.repoName,
+            //     owner: repoDetails.repoOwner,
+            //     message: "ci update",
+            //     branch: "main",
+            //     sha: fileSha,
+            //     content: "test"
+            // })
+            // console.log('packageJsonUpdateResult', packageJsonResult)
+            // githubChangeRemoteFile({
+            //     user: repoDetails.repoOwner,
+            //     repo: repoDetails.repoName,
+            //     filename: 'package.json',
+            //     transform: (pkg: string) => {
+            //       const parsedPkg = JSON.parse(pkg)
+            //       parsedPkg.version = nextReleaseTag
+            //       return JSON.stringify(parsedPkg, null, 2)
+            //     },
+            //     token: core.getInput('github_token')
+            //   })
+            //   .then((res: string) => console.log(res))
+            //   .catch(console.log)
+            
+        }
     } catch (error: any) {
         core.setFailed(error.message);
     }
