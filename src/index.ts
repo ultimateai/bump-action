@@ -56,6 +56,12 @@ const start = async () => {
             switch(core.getInput('update_file').trim()){
                 case "package.json":
                     console.log("this clearly works")
+                    const getSha = await octokit.request('GET /repos/{owner}/{repo}/contents/package.json', {
+                        repo: repoDetails.repoName,
+                        owner: repoDetails.repoOwner,
+                        branch: "main"
+                    })
+                    console.log('getSha',getSha)
                     const packageJsonResult = await octokit.request('PUT /repos/{owner}/{repo}/contents/package.json', {
                         repo: repoDetails.repoName,
                         owner: repoDetails.repoOwner,
