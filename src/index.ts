@@ -56,7 +56,7 @@ const start = async () => {
             switch(core.getInput('update_file').trim()){
                 case "package.json":
                     console.log("this clearly works")
-                    const packageJsonResult = await octokit.request('POST /repos/{owner}/{repo}/contents/package.json', {
+                    const packageJsonResult = await octokit.request('PUT /repos/{owner}/{repo}/contents/package.json', {
                         repo: repoDetails.repoName,
                         owner: repoDetails.repoOwner,
                         message: "ci update",
