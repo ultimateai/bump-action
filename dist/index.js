@@ -35995,9 +35995,18 @@ const start = async () => {
         });
         if (core.getInput('update_file')) {
             console.log("Input file to be modified is " + core.getInput('update_file'));
+            // Clone repo 
             switch (core.getInput('update_file').trim()) {
                 case "package.json":
                     console.log("this clearly works");
+                    const packageJsonResult = await octokit.request('POST /repos/{owner}/{repo}/contents/package.json', {
+                        repo: repoDetails.repoName,
+                        owner: repoDetails.repoOwner,
+                        message: "ci update",
+                        branch: "main",
+                        content: "test"
+                    });
+                    console.log('packageJsonUpdateResult', packageJsonResult);
                     // githubChangeRemoteFile({
                     //     user: repoDetails.repoOwner,
                     //     repo: repoDetails.repoName,
