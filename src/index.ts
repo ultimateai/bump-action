@@ -91,7 +91,7 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
             let todayDate = new Date()
-            const updatedFileContent = todayDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageBody}\n` + fileContent 
+            const updatedFileContent = todayDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageBody}\n` + fileContent 
             console.log("Updated changelog.md\n\n\n\n", updatedFileContent)
 
             const updatedFileContentBase64 = Base64.encode(updatedFileContent)
