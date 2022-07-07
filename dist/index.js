@@ -36307,8 +36307,9 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha;
             const fileContent = gBase64.decode(fileToUpdate.data.content);
             console.log("changelog.md", fileContent);
-            const updatedFileContent = Date() + ", " + nextReleaseTag + "\n" + `\t${String.fromCodePoint(0x80)}&#x2022;here goes the latest commit =D` + fileContent;
-            console.log("Updated changelog.md", updatedFileContent);
+            let yourDate = new Date();
+            const updatedFileContent = yourDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n" + `\t${String.fromCodePoint(0x2022)}here goes the latest commit =D\n` + fileContent;
+            console.log("Updated changelog.md\n\n\n\n", updatedFileContent);
             // const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
             //     repo: repoDetails.repoName,
             //     owner: repoDetails.repoOwner,
