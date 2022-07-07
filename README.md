@@ -1,6 +1,6 @@
 # merge-bump-release
 
-GitHub action to be applied on merged pull-request, to bump a semver and create a new release.
+GitHub action to be applied on merged pull-request, to bump a semver and create a new release. Optionally, it can also bump version on changelog and package.json/version.txt
 
 ## Setting up in your workflow:
 
