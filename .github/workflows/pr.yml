@@ -6,16 +6,19 @@ on:
       - closed
 
 jobs:
-  release:
+  bump-release:
+    name: Bump release
     if: github.event.pull_request.merged == true
-    name: PR
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Run action
-        uses: amiiit/merge-bump-release@v0.3.8
+
+      - name: Bump version and release
+        uses: ultimateai/bump-action@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN  }}
-          tag_prefix: 'v'
+          github_token: ${{ secrets.ULTIMATE_GITHUB_PAT }}
+          infer_bump_from_commit: true
+          update_file: package.json
+          changelog: true

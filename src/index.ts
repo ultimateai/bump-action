@@ -3,7 +3,6 @@ import type {Bump} from "./bump";
 
 const core = require('@actions/core')
 const github = require('@actions/github');
-const githubChangeRemoteFile = require("github-change-remote-file")
 import { Base64 } from 'js-base64';
 
 
@@ -57,17 +56,18 @@ const start = async () => {
         if(core.getInput('update_file')){
             console.log("Input file to be modified is " + core.getInput('update_file'))
             if(core.getInput('update_file') == "package.json"){
+                //Get input file
                 const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
-                    repo: repoDetails.repoName,
-                    owner: repoDetails.repoOwner,
-                    branch: "main"
-                })
+                repo: repoDetails.repoName,
+                owner: repoDetails.repoOwner,
+                branch: "main"
+            })
                 const fileSha = fileToUpdate.data.sha
+                var updatedFileContent
                 const fileContent = JSON.parse(Base64.decode(fileToUpdate.data.content))
                 fileContent.version = nextReleaseTag
-                const updatedFileContent = Base64.encode(JSON.stringify(fileContent,null,4))
-
-                const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                updatedFileContent = Base64.encode(JSON.stringify(fileContent,null,4))
+                const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
                     repo: repoDetails.repoName,
                     owner: repoDetails.repoOwner,
                     message: `Automatic file bump to ${nextReleaseTag}`,
@@ -75,11 +75,29 @@ const start = async () => {
                     sha: fileSha,
                     content: updatedFileContent
                 })
+                console.log('updateFileResult', updateFileResult) 
             }else if(core.getInput('update_file') == "version.txt"){
-                console.log("version.txt is not yet supported, sorry!")
+                //Get input file
+                const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                repo: repoDetails.repoName,
+                owner: repoDetails.repoOwner,
+                branch: "main"
+                })
+                const fileSha = fileToUpdate.data.sha
+                var updatedFileContent
+                updatedFileContent = Base64.encode(nextReleaseTag)
+                const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    message: `Automatic file bump to ${nextReleaseTag}`,
+                    branch: "main",
+                    sha: fileSha,
+                    content: updatedFileContent
+                })
+                console.log('updateFileResult', updateFileResult) 
             }else{
-                console.log("Your input file is not registered yet")
-            }            
+                core.setFailed("Your update_file does not exist or it's not supported.");
+            }       
         }
         if(core.getInput('changelog')){
             console.log("Input file to be modified is " + repoDetails.changelogFile)
@@ -90,16 +108,18 @@ const start = async () => {
             })
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
-            console.log("changelog.md", fileContent)
+            let changelogDate = new Date()
+            const updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline}\n` + fileContent)
+            const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
+                repo: repoDetails.repoName,
+                owner: repoDetails.repoOwner,
+                message: `Automatic file bump to ${nextReleaseTag}`,
+                branch: "main",
+                sha: fileSha,
+                content: updatedFileContent   
+            })      
+            // console.log('changelogResult', changelogResult)
             
-            // const packageJsonResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
-            //     repo: repoDetails.repoName,
-            //     owner: repoDetails.repoOwner,
-            //     message: `Automatic file bump to ${nextReleaseTag}`,
-            //     branch: "main",
-            //     sha: fileSha,
-            //     content: updatedFileContent
-            // })           
         }
     } catch (error: any) {
         core.setFailed(error.message);

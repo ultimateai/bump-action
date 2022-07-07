@@ -1,12 +1,11 @@
 # merge-bump-release
 
-GitHub action to be applied on merged pull-request, to bump a semver and create a new release.
+GitHub action to be applied on merged pull-request, to bump a semver and create a new release. Optionally, it can also bump version on changelog and package.json/version.txt
 
 ## Setting up in your workflow:
 
 The best explanation is by example. Please have a look at this project's [`pr.yml` file](./.github/workflows/pr.yml)
-to see how this project is dogfooding the action in order to bump-release itself. Your example
-may be a bit different, depending on your circumstances.
+to see how this project is dogfooding the action in order to bump-release itself.
 
 ## Features
 
@@ -25,3 +24,10 @@ Please refer to [`action.yml`](./action.yml) in this repository to see all avail
 ## Contributing
 
 If you need more features, please submit an issue or a pull request.
+
+## How to add additional features and/or test
+
+1. Modify/add whatever you need from [`index.ts`](./src/index.ts)
+2. npm run build 
+3. Add, commit and push your commits to a different branch
+4. Invoke this action with your branch --> uses: ultimateai/bump-action@{Your_branch}
