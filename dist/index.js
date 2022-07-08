@@ -9131,37 +9131,54 @@ const start = async () => {
             prerelease: false,
             generate_release_notes: false
         });
-        console.log('releaseResult', releaseResult);
+        // console.log('releaseResult', releaseResult)
         if (core.getInput('update_file')) {
             console.log("Input file to be modified is " + core.getInput('update_file'));
-            //Get input file
-            const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
-                repo: repoDetails.repoName,
-                owner: repoDetails.repoOwner,
-                branch: "main"
-            });
-            const fileSha = fileToUpdate.data.sha;
-            var updatedFileContent;
             if (core.getInput('update_file') == "package.json") {
+                //Get input file
+                const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    branch: "main"
+                });
+                const fileSha = fileToUpdate.data.sha;
+                var updatedFileContent;
                 const fileContent = JSON.parse(gBase64.decode(fileToUpdate.data.content));
                 fileContent.version = nextReleaseTag;
                 updatedFileContent = gBase64.encode(JSON.stringify(fileContent, null, 4));
+                const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    message: `Automatic file bump to ${nextReleaseTag}`,
+                    branch: "main",
+                    sha: fileSha,
+                    content: updatedFileContent
+                });
+                console.log('updateFileResult', updateFileResult);
             }
             else if (core.getInput('update_file') == "version.txt") {
+                //Get input file
+                const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    branch: "main"
+                });
+                const fileSha = fileToUpdate.data.sha;
+                var updatedFileContent;
                 updatedFileContent = gBase64.encode(nextReleaseTag);
+                const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    message: `Automatic file bump to ${nextReleaseTag}`,
+                    branch: "main",
+                    sha: fileSha,
+                    content: updatedFileContent
+                });
+                console.log('updateFileResult', updateFileResult);
             }
             else {
                 core.setFailed("Your update_file does not exist or it's not supported.");
             }
-            const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
-                repo: repoDetails.repoName,
-                owner: repoDetails.repoOwner,
-                message: `Automatic file bump to ${nextReleaseTag}`,
-                branch: "main",
-                sha: fileSha,
-                content: updatedFileContent
-            });
-            console.log('updateFileResult', updateFileResult);
         }
         if (core.getInput('changelog')) {
             console.log("Input file to be modified is " + repoDetails.changelogFile);
