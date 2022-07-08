@@ -8778,14 +8778,14 @@ const bump = (version, bump) => {
     }
     const cleanVersion = cleanVersionMatcher[1];
     const parts = cleanVersion.split('.').map((p) => parseInt(p));
-    if (bump === 'patch') {
+    if (bump === 'patch' || bump === 'fix') {
         parts[2]++;
     }
-    else if (bump === 'minor') {
+    else if (bump === 'minor' || bump === 'feat') {
         parts[1]++;
         parts[2] = 0;
     }
-    else if (bump === 'major') {
+    else if (bump === 'major' || bump === 'breaking') {
         parts[0]++;
         parts[1] = parts[2] = 0;
     }
@@ -8801,11 +8801,11 @@ const inferBumpFromCommit = (commit) => {
     }
     return 'patch';
 };
-const BUMPS = ['patch', 'minor', 'major'];
+const BUMPS = ['patch', 'fix', 'minor', 'feat', 'major', 'breaking'];
 const determineBumpType = (commit, options) => {
     if (options.inputBump) {
         if (!BUMPS.includes(options.inputBump.toLowerCase())) {
-            throw `provided input to bump: "${options.inputBump}", must be one of patch, minor, major.`;
+            throw `provided input to bump: "${options.inputBump}", must be one of patch or fix, minor or feat, major or breaking.`;
         }
         else {
             return options.inputBump.toLowerCase();
@@ -9199,7 +9199,7 @@ const start = async () => {
                 sha: fileSha,
                 content: updatedFileContent
             });
-            console.log('changelogResult', changelogResult);
+            // console.log('changelogResult', changelogResult)
         }
     }
     catch (error) {

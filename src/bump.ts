@@ -1,6 +1,6 @@
 import {CommitMessageQueryResponse, MergeCommit} from "./QueryTypes";
 
-export type Bump = 'major' | 'minor' | 'patch';
+export type Bump = 'major' | 'breaking' | 'minor' | 'feat' | 'patch' | 'fix';
 
 export const bump = (version: string, bump: Bump) => {
     const cleanVersionMatcher = version.match(/[^\d]*((\d+)\.(\d+)\.(\d+)).*/);
@@ -9,12 +9,12 @@ export const bump = (version: string, bump: Bump) => {
     }
     const cleanVersion = cleanVersionMatcher[1];
     const parts = cleanVersion.split('.').map((p) => parseInt(p));
-    if (bump === 'patch') {
+    if (bump === 'patch' || bump === 'fix') {
         parts[2]++;
-    } else if (bump === 'minor') {
+    } else if (bump === 'minor' || bump === 'feat') {
         parts[1]++;
         parts[2] = 0;
-    } else if (bump === 'major') {
+    } else if (bump === 'major' || bump === 'breaking') {
         parts[0]++;
         parts[1] = parts[2] = 0;
     }
@@ -37,11 +37,11 @@ const inferBumpFromCommit = (commit: MergeCommit): Bump => {
     return 'patch'
 }
 
-const BUMPS: string[] = ['patch','minor','major']
+const BUMPS: string[] = ['patch','fix','minor','feat','major','breaking']
 export const determineBumpType = (commit: MergeCommit, options: DetermineBumpTypeOptions): Bump => {
     if (options.inputBump) {
         if (!BUMPS.includes(options.inputBump.toLowerCase() as Bump)) {
-            throw `provided input to bump: "${options.inputBump}", must be one of patch, minor, major.`
+            throw `provided input to bump: "${options.inputBump}", must be one of patch or fix, minor or feat, major or breaking.`
         } else {
             return options.inputBump.toLowerCase() as Bump
         }

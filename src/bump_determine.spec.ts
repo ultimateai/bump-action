@@ -27,7 +27,7 @@ describe('determine bump', () => {
         expect(() => determineBumpType(EMPTY_COMMIT_MESSAGE, {
             inputBump: 'invalid',
             inferBumpFromCommit: false
-        })).toThrow(`provided input to bump: "invalid", must be one of patch, minor, major.`)
+        })).toThrow(`provided input to bump: "invalid", must be one of patch or fix, minor or feat, major or breaking.`)
     })
     it('infer from commit. commit ambiguous ', () => {
         expect(determineBumpType({
@@ -54,5 +54,13 @@ describe('determine bump', () => {
             inputBump: '',
             inferBumpFromCommit: true
         })).toBe('major')
+
+        expect(determineBumpType({
+            messageHeadline: 'Breaking something, changes ahead',
+            messageBody: '...'
+        }, {
+            inputBump: '',
+            inferBumpFromCommit: true
+        })).toBe('breaking')
     })
 })
