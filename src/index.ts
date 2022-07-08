@@ -118,7 +118,7 @@ const start = async () => {
                 sha: fileSha,
                 content: updatedFileContent   
             })      
-            console.log('changelogResult', changelogResult)
+            // console.log('changelogResult', changelogResult)
             
         }
     } catch (error: any) {
