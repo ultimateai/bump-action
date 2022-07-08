@@ -9,10 +9,10 @@ inputs:
     required: false
     default: ''
   bump:
-    description: 'Bump type to determine which part of the SemVer will be increased. Can be one of: minor/major/patch. Will default to patch, unless other mechanisms of determining these were defined'
+    description: 'Bump type to determine which part of the SemVer will be increased. Can be one of: minor|feat or major|breaking or patch|fix. Will default to patch, unless other mechanisms of determining these were defined'
     required: false
   infer_bump_from_commit:
-    description: 'If set to true, looks for major, minor, patch in the commit in order to determine the bump.'
+    description: 'If set to true, looks for minor|feat or major|breaking or patch|fix in the commit in order to determine the bump.'
     required: false
   update_file:
     description: 'Choose the file you want to update'
