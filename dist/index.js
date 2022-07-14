@@ -9109,13 +9109,10 @@ const start = async () => {
             ...repoDetails,
             prNumber: github.context.payload.pull_request?.number
         });
-        console.log("author", commitMessage.repository.pullRequest.mergeCommit.author);
-        console.log("author type", typeof commitMessage.repository.pullRequest.mergeCommit.author);
-        console.log(commitMessage.repository.pullRequest.mergeCommit.author.name);
         const latestRelease = await octokit.graphql(lastReleaseQuery, {
             ...repoDetails
         });
-        const latestVersion = latestRelease.repository.latestRelease.tag.name;
+        const latestVersion = latestRelease.repository.latestRelease?.tag.name;
         const bumpType = determineBumpType(commitMessage.repository.pullRequest.mergeCommit, {
             inputBump: core.getInput('bump'),
             inferBumpFromCommit: core.getInput('infer_bump_from_commit')
@@ -9157,7 +9154,7 @@ const start = async () => {
                     sha: fileSha,
                     content: updatedFileContent
                 });
-                console.log('updateFileResult', updateFileResult);
+                // console.log('updateFileResult', updateFileResult) 
             }
             else if (core.getInput('update_file') == "version.txt") {
                 //Get input file
