@@ -4,6 +4,9 @@ query GetCommitMessageFromRepository($repoName: String!, $repoOwner: String!, $p
             mergeCommit {
                 messageBody
                 messageHeadline
+                author {
+                    name
+                }
             }
         }
     }
