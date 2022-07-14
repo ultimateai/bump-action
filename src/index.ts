@@ -10,7 +10,6 @@ import { Base64 } from 'js-base64';
 import commitMessageQuery from 'inline!./src/GetCommitMessageFromRepository.query.graphql'
 import lastReleaseQuery from 'inline!./src/GetLastReleaseQuery.query.graphql'
 import type {CommitMessageQueryResponse, LatestReleaseQueryResponse} from "./QueryTypes";
-import { parse } from "path";
 
 const repoDetails = {
     repoName: github.context.repo.repo,
@@ -95,6 +94,10 @@ const start = async () => {
                     content: updatedFileContent
                 })
                 console.log('updateFileResult', updateFileResult) 
+                console.log('Author?',updateFileResult.data.commit.author)
+                console.log('Author2?',updateFileResult.data.commit.committer)
+                console.log('Author3?',updateFileResult.data.commit.parents)
+
             }else{
                 core.setFailed("Your update_file does not exist or it's not supported.");
             }       
@@ -109,7 +112,7 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
             let changelogDate = new Date()
-            const updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline}\n` + fileContent)
+            const updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + fileContent)
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,

@@ -4,6 +4,9 @@ import {CommitMessageQueryResponse, MergeCommit} from "./QueryTypes";
 const EMPTY_COMMIT_MESSAGE = {
     messageBody: '',
     messageHeadline: '',
+    author:{
+        name:''
+    }
 }
 
 describe('determine bump', () => {
@@ -32,7 +35,10 @@ describe('determine bump', () => {
     it('infer from commit. commit ambiguous ', () => {
         expect(determineBumpType({
             messageHeadline: 'lorem ipsum',
-            messageBody: '...'
+            messageBody: '...',
+            author: {
+                name:''
+            }
         }, {
             inputBump: '',
             inferBumpFromCommit: true
@@ -41,7 +47,10 @@ describe('determine bump', () => {
     it('infer from commit. commit clear ', () => {
         expect(determineBumpType({
             messageHeadline: 'minor Added small feature',
-            messageBody: '...'
+            messageBody: '...',
+            author: {
+                name:''
+            }
         }, {
             inputBump: '',
             inferBumpFromCommit: true
@@ -49,7 +58,10 @@ describe('determine bump', () => {
 
         expect(determineBumpType({
             messageHeadline: 'major Breaking changes ahead',
-            messageBody: '...'
+            messageBody: '...',
+            author: {
+                name:''
+            }
         }, {
             inputBump: '',
             inferBumpFromCommit: true
@@ -57,7 +69,10 @@ describe('determine bump', () => {
 
         expect(determineBumpType({
             messageHeadline: 'Breaking something, changes ahead',
-            messageBody: '...'
+            messageBody: '...',
+            author: {
+                name:''
+            }
         }, {
             inputBump: '',
             inferBumpFromCommit: true
