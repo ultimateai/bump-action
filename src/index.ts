@@ -24,7 +24,7 @@ const start = async () => {
             ...repoDetails,
             prNumber: github.context.payload.pull_request?.number
         })
-
+        
         const latestRelease: LatestReleaseQueryResponse = await octokit.graphql(lastReleaseQuery, {
             ...repoDetails
         })
@@ -74,7 +74,7 @@ const start = async () => {
                     sha: fileSha,
                     content: updatedFileContent
                 })
-                console.log('updateFileResult', updateFileResult) 
+                // console.log('updateFileResult', updateFileResult) 
             }else if(core.getInput('update_file') == "version.txt"){
                 //Get input file
                 const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
@@ -93,11 +93,7 @@ const start = async () => {
                     sha: fileSha,
                     content: updatedFileContent
                 })
-                console.log('updateFileResult', updateFileResult) 
-                console.log('Author?',updateFileResult.data.commit.author)
-                console.log('Author2?',updateFileResult.data.commit.committer)
-                console.log('Author3?',updateFileResult.data.commit.parents)
-
+                // console.log('updateFileResult', updateFileResult) 
             }else{
                 core.setFailed("Your update_file does not exist or it's not supported.");
             }       
