@@ -9177,10 +9177,7 @@ const start = async () => {
                     sha: fileSha,
                     content: updatedFileContent
                 });
-                console.log('updateFileResult', updateFileResult);
-                console.log('Author?', updateFileResult.data.commit.author);
-                console.log('Author2?', updateFileResult.data.commit.committer);
-                console.log('Author3?', updateFileResult.data.commit.parents);
+                // console.log('updateFileResult', updateFileResult) 
             }
             else {
                 core.setFailed("Your update_file does not exist or it's not supported.");
