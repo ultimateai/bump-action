@@ -29,13 +29,17 @@ const start = async () => {
             ...repoDetails
         })
 
-        const latestVersion = latestRelease.repository.latestRelease?.tag.name
+        //Workout latest version from latest release, but have a default in case no release has been manually created
+        var latestVersion = core.getInput('initial_release') || '0.0.1'
+        if (latestRelease){
+            latestVersion = latestRelease.repository.latestRelease?.tag.name
+        }
 
         const bumpType: Bump = determineBumpType(commitMessage.repository.pullRequest.mergeCommit, {
             inputBump: core.getInput('bump'),
             inferBumpFromCommit: core.getInput('infer_bump_from_commit')
         })
-        const nextVersion = bump((latestVersion || '0') as string, bumpType)
+        const nextVersion = bump((latestVersion) as string, bumpType)
 
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion
         core.setOutput('next_version', nextReleaseTag)

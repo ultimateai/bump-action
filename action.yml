@@ -21,6 +21,10 @@ inputs:
     description: 'Update changelog'
     required: false
     default: true
+  initial_release:
+    description: 'In case no release is present in the repo, which one should be the first release.'
+    required: false
+    default: '0.0.1'
 
 outputs:
   next_version: # id of output
