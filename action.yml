@@ -22,7 +22,7 @@ inputs:
     required: false
     default: true
   initial_release:
-    description: 'In case no release is present in the repo, which one should be the base release - defaults to 0.0.0'
+    description: 'In case no release is present in the repo, which one should be the base release from which to bump - defaults to 0.0.0'
     required: false
     default: '0.0.0'
 
