@@ -30,10 +30,14 @@ const start = async () => {
         })
         console.log("Before core get input initial release")
         //Workout latest version from latest release, but have a default in case no release has been manually created
+        console.log("core get input initial release" + core.getInput('initial_release'))
         var latestVersion = core.getInput('initial_release') || '0.0.1'
+        console.log("latestVersion " + latestVersion)
         if (latestRelease){
+            console.log("Estamos entrando en este if, verdad???")
             latestVersion = latestRelease.repository.latestRelease?.tag.name
         }
+        console.log("latestVersion 2 " + latestVersion)
         console.log("After core get input initial release")
 
 
