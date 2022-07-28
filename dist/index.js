@@ -9113,8 +9113,10 @@ const start = async () => {
             ...repoDetails
         });
         //Workout latest version from latest release, but have a default in case no release has been manually created
-        var latestVersion = latestRelease.repository.latestRelease?.tag.name ? latestRelease.repository.latestRelease?.tag.name : core.getInput('initial_release');
-        console.log("testing latestVersion" + latestVersion);
+        var latestVersion = core.getInput('initial_release');
+        if (latestRelease.repository.latestRelease?.tag.name) {
+            latestVersion = latestRelease.repository.latestRelease?.tag.name;
+        }
         const bumpType = determineBumpType(commitMessage.repository.pullRequest.mergeCommit, {
             inputBump: core.getInput('bump'),
             inferBumpFromCommit: core.getInput('infer_bump_from_commit')
