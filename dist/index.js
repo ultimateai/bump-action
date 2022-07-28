@@ -9112,26 +9112,17 @@ const start = async () => {
         const latestRelease = await octokit.graphql(lastReleaseQuery, {
             ...repoDetails
         });
-        console.log("Before core get input initial release");
         //Workout latest version from latest release, but have a default in case no release has been manually created
-        console.log("core get input initial release" + core.getInput('initial_release'));
-        var latestVersion = core.getInput('initial_release') || '0.0.1';
-        console.log("latestVersion " + latestVersion);
+        var latestVersion = core.getInput('initial_release') || '0.0.0';
         if (latestRelease.repository.latestRelease?.tag.name) {
-            console.log("Estamos entrando en este if, verdad???");
             latestVersion = latestRelease.repository.latestRelease?.tag.name;
         }
-        console.log("latestVersion 2 " + latestVersion);
-        console.log("After core get input initial release");
         const bumpType = determineBumpType(commitMessage.repository.pullRequest.mergeCommit, {
             inputBump: core.getInput('bump'),
             inferBumpFromCommit: core.getInput('infer_bump_from_commit')
         });
-        console.log("Before bumping" + latestVersion);
         const nextVersion = bump((latestVersion), bumpType);
-        console.log("After bumping" + nextVersion);
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion;
-        core.setOutput('next_version', nextReleaseTag);
         const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
             repo: repoDetails.repoName,
             owner: repoDetails.repoOwner,
