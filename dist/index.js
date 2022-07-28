@@ -9123,7 +9123,7 @@ const start = async () => {
             inputBump: core.getInput('bump'),
             inferBumpFromCommit: core.getInput('infer_bump_from_commit')
         });
-        console.log("Before bumping");
+        console.log("Before bumping" + latestVersion);
         const nextVersion = bump((latestVersion), bumpType);
         console.log("After bumping" + nextVersion);
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion;
