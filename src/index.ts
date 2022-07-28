@@ -33,7 +33,7 @@ const start = async () => {
         console.log("core get input initial release" + core.getInput('initial_release'))
         var latestVersion = core.getInput('initial_release') || '0.0.1'
         console.log("latestVersion " + latestVersion)
-        if (latestRelease){
+        if (latestRelease.repository.latestRelease?.tag.name){
             console.log("Estamos entrando en este if, verdad???")
             latestVersion = latestRelease.repository.latestRelease?.tag.name
         }
