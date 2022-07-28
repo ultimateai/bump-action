@@ -30,6 +30,7 @@ const start = async () => {
         })
         //Workout latest version from latest release, but have a default in case no release has been manually created
         var latestVersion = core.getInput('initial_release')
+        console.log("What is the input, which should be defaulted" + core.getInput('initial_release'))
         console.log("First latest version" + latestVersion)
         if (latestRelease.repository.latestRelease?.tag.name){
             latestVersion = latestRelease.repository.latestRelease?.tag.name
