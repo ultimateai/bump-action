@@ -97,14 +97,6 @@ const start = async () => {
             }       
         }
         if(core.getInput('changelog')){
-            console.log("Just before the request")
-            const tagDiffs = await octokit.request(`GET /repos/{owner}/{repo}/compare/{base}...{head}`, {
-                repo: repoDetails.repoName,
-                owner: repoDetails.repoOwner,
-                base: "main",
-                head: "feat/git-diff"
-            })
-            console.log("tagDiffs is " + JSON. stringify(tagDiffs, null, 4))
             console.log("Input file to be modified is " + repoDetails.changelogFile)
             const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
@@ -113,8 +105,19 @@ const start = async () => {
             })
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
-            let changelogDate = new Date()
-            const updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + fileContent)
+            const changelogDate = new Date()
+            let updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + fileContent)
+            let diffMergedBranch
+            if(core.getInput('merged_branch')){
+                diffMergedBranch = await octokit.request(`GET /repos/{owner}/{repo}/compare/{base}...{head}`, {
+                    repo: repoDetails.repoName,
+                    owner: repoDetails.repoOwner,
+                    base: "main",
+                    head: core.getInput('merged_branch')
+                })
+                console.log("tagDiffs is " + diffMergedBranch.data.html_url)
+                updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n + "\tDiff: ${diffMergedBranch.data.html_url}"` + fileContent)
+            }
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
@@ -122,7 +125,8 @@ const start = async () => {
                 branch: "main",
                 sha: fileSha,
                 content: updatedFileContent   
-            })      
+            })
+                  
             // console.log('changelogResult', changelogResult)
             
         }

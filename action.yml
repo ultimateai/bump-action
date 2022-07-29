@@ -21,6 +21,9 @@ inputs:
     description: 'Update changelog'
     required: false
     default: true
+  merged_branch:
+    description: 'Merged branch - only necessary for adding some info to changelog'
+    required: false
   initial_release:
     description: 'In case no release is present in the repo, which one should be the base release from which to bump - defaults to 0.0.0'
     required: false
