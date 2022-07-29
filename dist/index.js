@@ -9201,7 +9201,7 @@ const start = async () => {
                     head: core.getInput('merged_branch')
                 });
                 console.log("tagDiffs is " + diffMergedBranch.data.html_url);
-                updatedFileContent = gBase64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n + "\tDiff: ${diffMergedBranch.data.html_url}"` + fileContent);
+                updatedFileContent = gBase64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + `\tDiff: ${diffMergedBranch.data.html_url}\n` + fileContent);
             }
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
