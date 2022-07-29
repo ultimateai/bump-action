@@ -108,6 +108,7 @@ const start = async () => {
             const changelogDate = new Date()
             let updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + fileContent)
             let diffMergedBranch
+            console.log("What is merged_branch?" + core.getInput('merged_branch'))
             if(core.getInput('merged_branch')){
                 diffMergedBranch = await octokit.request(`GET /repos/{owner}/{repo}/compare/{base}...{head}`, {
                     repo: repoDetails.repoName,
