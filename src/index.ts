@@ -97,6 +97,8 @@ const start = async () => {
             }       
         }
         if(core.getInput('changelog')){
+            const tagDiffs = await octokit.request(`GET /repos/{owner}/{repo}/compare/1.0.0...1.0.1`)
+            console.log("tagDiffs is " + tagDiffs)
             console.log("Input file to be modified is " + repoDetails.changelogFile)
             const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
