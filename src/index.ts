@@ -104,7 +104,7 @@ const start = async () => {
                 base: "main",
                 head: "feat/git-diff"
             })
-            console.log("tagDiffs is " + tagDiffs.diff_url)
+            console.log("tagDiffs is " + JSON. stringify(tagDiffs, null, 4))
             console.log("Input file to be modified is " + repoDetails.changelogFile)
             const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
