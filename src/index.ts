@@ -37,22 +37,26 @@ const start = async () => {
         })
         const nextVersion = bump((latestVersion) as string, bumpType)
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion
-        // let headerMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline
-        // let bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageBody
+        let headerMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline
+        let bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageBody
+        //Bypassing GitHub limitation of 70 characters
+        console.log("headerMessage" + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
+        console.log("bodyMessage" + commitMessage.repository.pullRequest.mergeCommit.messageBody)
+        if( (headerMessage.length > 67) && (headerMessage.endsWith('...')) ){
+            headerMessage = headerMessage.substring(0, headerMessage.indexOf('...')) + bodyMessage.replace('...','').split(/\r?\n/)[0];
+            console.log("headerMessage inside if is " + headerMessage)
+            bodyMessage = bodyMessage.replace(bodyMessage.replace('...','').split(/\r?\n/)[0],'')
+            console.log("bodyMessage inside if is " + bodyMessage)
+        }
 
-        // if(commitMessage.repository.pullRequest.mergeCommit.messageHeadline.length > 67){
-        //     headerMessage = "";
-        //     bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline + '/n/n' + commitMessage.repository.pullRequest.mergeCommit.messageBody
-        // }
-
-        console.log(commitMessage.repository.pullRequest.mergeCommit.messageHeadline.length + '/n/n' + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
+        console.log(commitMessage.repository.pullRequest.mergeCommit + '/n/n' + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
         const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
             repo: repoDetails.repoName,
             owner: repoDetails.repoOwner,
             tag_name: nextReleaseTag,
             target_commitish: 'main',
-            name: commitMessage.repository.pullRequest.mergeCommit.messageHeadline,
-            body: commitMessage.repository.pullRequest.mergeCommit.messageBody,
+            name: headerMessage,
+            body: bodyMessage,
             draft: false,
             prerelease: false,
             generate_release_notes: true
@@ -114,7 +118,7 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
             const changelogDate = new Date()
-            updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} Commit --> ${commitMessage.repository.pullRequest.mergeCommit.messageHeadline} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + `\t${String.fromCodePoint(0x2022)} Diff --> https://github.com/${repoDetails.repoOwner}/${repoDetails.repoName}/compare/${latestVersion}...${nextReleaseTag}\n\n` + fileContent)
+            updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} Commit --> ${headerMessage} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + `\t${String.fromCodePoint(0x2022)} Diff --> https://github.com/${repoDetails.repoOwner}/${repoDetails.repoName}/compare/${latestVersion}...${nextReleaseTag}\n\n` + fileContent)
             
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
