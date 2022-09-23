@@ -37,7 +37,15 @@ const start = async () => {
         })
         const nextVersion = bump((latestVersion) as string, bumpType)
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion
+        // let headerMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline
+        // let bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageBody
 
+        // if(commitMessage.repository.pullRequest.mergeCommit.messageHeadline.length > 67){
+        //     headerMessage = "";
+        //     bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline + '/n/n' + commitMessage.repository.pullRequest.mergeCommit.messageBody
+        // }
+
+        console.log(commitMessage.repository.pullRequest.mergeCommit.messageHeadline.length + '/n/n' + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
         const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
             repo: repoDetails.repoName,
             owner: repoDetails.repoOwner,
@@ -47,9 +55,9 @@ const start = async () => {
             body: commitMessage.repository.pullRequest.mergeCommit.messageBody,
             draft: false,
             prerelease: false,
-            generate_release_notes: false
+            generate_release_notes: true
         })
-        // console.log('releaseResult', releaseResult)
+        console.log('releaseResult', releaseResult)
         if(core.getInput('update_file')){
             console.log("Input file to be modified is " + core.getInput('update_file'))
             if(core.getInput('update_file') == "package.json"){
@@ -67,7 +75,7 @@ const start = async () => {
                 const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
                     repo: repoDetails.repoName,
                     owner: repoDetails.repoOwner,
-                    message: `Automatic file bump to ${nextReleaseTag}`,
+                    message: `Automatic ${core.getInput('update_file')} bump to ${nextReleaseTag}`,
                     branch: "main",
                     sha: fileSha,
                     content: updatedFileContent
@@ -86,7 +94,7 @@ const start = async () => {
                 const updateFileResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
                     repo: repoDetails.repoName,
                     owner: repoDetails.repoOwner,
-                    message: `Automatic file bump to ${nextReleaseTag}`,
+                    message: `Automatic ${core.getInput('update_file')} bump to ${nextReleaseTag}`,
                     branch: "main",
                     sha: fileSha,
                     content: updatedFileContent
@@ -111,7 +119,7 @@ const start = async () => {
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
-                message: `Automatic file bump to ${nextReleaseTag}`,
+                message: `Automatic bump of ${repoDetails.changelogFile}`,
                 branch: "main",
                 sha: fileSha,
                 content: updatedFileContent   
