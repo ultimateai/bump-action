@@ -42,6 +42,8 @@ const start = async () => {
         //Bypassing GitHub limitation of 70 characters
         console.log("headerMessage" + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
         console.log("bodyMessage" + commitMessage.repository.pullRequest.mergeCommit.messageBody)
+        console.log("length" + (headerMessage.length > 67))
+        console.log("endsWith" + (headerMessage.endsWith('...')))
         if( (headerMessage.length > 67) && (headerMessage.endsWith('...')) ){
             headerMessage = headerMessage.substring(0, headerMessage.indexOf('...')) + bodyMessage.replace('...','').split(/\r?\n/)[0];
             console.log("headerMessage inside if is " + headerMessage)
