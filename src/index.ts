@@ -39,14 +39,13 @@ const start = async () => {
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion
         let headerMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline
         let bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageBody
-
-        //Bypassing GitHub limitation of 70 characters on the library
+        
+        //Bypassing GitHub limitation of 70 characters on the squased commit info which arrives for working out the release 
         if( headerMessage.length > 69 ){
             headerMessage = headerMessage + " " + bodyMessage.split(/\r?\n/)[0];
             headerMessage = headerMessage.trim().replace(new RegExp("…", "g"), '')
             bodyMessage = bodyMessage.replace(bodyMessage.split(/\r?\n/)[0],'').replace(new RegExp("…", "g"), '')
         }
-
 
         const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
             repo: repoDetails.repoName,
