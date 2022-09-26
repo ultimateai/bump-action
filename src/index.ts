@@ -115,7 +115,7 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
             const changelogDate = new Date()
-            updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} Commit --> ${headerMessage} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + `\t${String.fromCodePoint(0x2022)} Diff --> https://github.com/${repoDetails.repoOwner}/${repoDetails.repoName}/compare/${latestVersion}...${nextReleaseTag}\n\n` + fileContent)
+            updatedFileContent = Base64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + '\t${String.fromCodePoint(0x2022)} Commit --> ${headerMessage} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n' + '\t${String.fromCodePoint(0x2022)} [Diff] --> https://github.com/${repoDetails.repoOwner}/${repoDetails.repoName}/compare/${latestVersion}...${nextReleaseTag}\n\n' + fileContent)
             
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
