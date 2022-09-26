@@ -9803,12 +9803,15 @@ const start = async () => {
         let headerMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline;
         let bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageBody;
         //Bypassing GitHub limitation of 70 characters
-        console.log("headerMessage" + commitMessage.repository.pullRequest.mergeCommit.messageHeadline);
-        console.log("bodyMessage" + commitMessage.repository.pullRequest.mergeCommit.messageBody);
-        console.log("What is the length" + (headerMessage.length));
         if (headerMessage.length > 69) {
             headerMessage = headerMessage + " " + bodyMessage.split(/\r?\n/)[0];
-            console.log("headerMessage inside if is " + headerMessage);
+            console.log("Header message BEFORE the trim and replace " + headerMessage);
+            headerMessage = headerMessage.trim().replace('...', '').replace('…', '');
+            console.log("Header message AFTER the trim and replace " + headerMessage);
+            console.log("Does Header Message contain ... " + headerMessage.includes("..."));
+            console.log("Does Header Message contain ... " + headerMessage.includes('...'));
+            console.log("Does Header Message contain … " + headerMessage.includes("…"));
+            console.log("Does Header Message contain … " + headerMessage.includes('…'));
             bodyMessage = bodyMessage.replace(bodyMessage.replace('…', '').split(/\r?\n/)[0], '');
             console.log("bodyMessage inside if is " + bodyMessage);
         }
