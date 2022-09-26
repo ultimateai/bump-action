@@ -9807,6 +9807,8 @@ const start = async () => {
         console.log("bodyMessage" + commitMessage.repository.pullRequest.mergeCommit.messageBody);
         console.log("length" + (headerMessage.length > 67));
         console.log("endsWith" + (headerMessage.trim().endsWith('…')));
+        console.log("What is the length" + (headerMessage.length));
+        console.log("What is the last fucking characters" + headerMessage.charAt(headerMessage.length - 1) + ', ' + headerMessage.charAt(headerMessage.length - 2) + ', ' + headerMessage.charAt(headerMessage.length - 3) + ', ' + headerMessage.charAt(headerMessage.length - 4) + ', LAST CHAR ' + headerMessage.charAt(headerMessage.length));
         if ((headerMessage.length > 67) && (headerMessage.trim().endsWith('…'))) {
             headerMessage = headerMessage.substring(0, headerMessage.indexOf('…')) + "" + bodyMessage.replace('…', '').split(/\r?\n/)[0];
             console.log("headerMessage inside if is " + headerMessage);
