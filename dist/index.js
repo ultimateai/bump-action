@@ -9802,7 +9802,7 @@ const start = async () => {
         const nextReleaseTag = core.getInput('tag_prefix') + nextVersion;
         let headerMessage = commitMessage.repository.pullRequest.mergeCommit.messageHeadline;
         let bodyMessage = commitMessage.repository.pullRequest.mergeCommit.messageBody;
-        //Bypassing GitHub limitation of 70 characters on the library
+        //Bypassing GitHub limitation of 70 characters on the squased commit info which arrives for working out the release 
         if (headerMessage.length > 69) {
             headerMessage = headerMessage + " " + bodyMessage.split(/\r?\n/)[0];
             headerMessage = headerMessage.trim().replace(new RegExp("…", "g"), '');
@@ -9878,7 +9878,7 @@ const start = async () => {
             const fileSha = fileToUpdate.data.sha;
             const fileContent = gBase64.decode(fileToUpdate.data.content);
             const changelogDate = new Date();
-            updatedFileContent = gBase64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + `\t${String.fromCodePoint(0x2022)} Commit --> ${headerMessage} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n` + `\t${String.fromCodePoint(0x2022)} Diff --> https://github.com/${repoDetails.repoOwner}/${repoDetails.repoName}/compare/${latestVersion}...${nextReleaseTag}\n\n` + fileContent);
+            updatedFileContent = gBase64.encode(changelogDate.toISOString().split('T')[0] + ", " + nextReleaseTag + "\n\n" + '\t${String.fromCodePoint(0x2022)} Commit --> ${headerMessage} (${commitMessage.repository.pullRequest.mergeCommit.author.name})\n' + '\t${String.fromCodePoint(0x2022)} [Diff] --> https://github.com/${repoDetails.repoOwner}/${repoDetails.repoName}/compare/${latestVersion}...${nextReleaseTag}\n\n' + fileContent);
             const changelogResult = await octokit.request(`PUT /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
