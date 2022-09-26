@@ -43,15 +43,16 @@ const start = async () => {
         console.log("headerMessage" + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
         console.log("bodyMessage" + commitMessage.repository.pullRequest.mergeCommit.messageBody)
         console.log("length" + (headerMessage.length > 67))
-        console.log("endsWith" + (headerMessage.endsWith('...')))
-        if( (headerMessage.length > 67) && (headerMessage.endsWith('...')) ){
-            headerMessage = headerMessage.substring(0, headerMessage.indexOf('...')) + bodyMessage.replace('...','').split(/\r?\n/)[0];
+        console.log("endsWith" + (headerMessage.trim().endsWith('…')))
+        if( (headerMessage.length > 67) && (headerMessage.trim().endsWith('…')) ){
+            headerMessage = headerMessage.substring(0, headerMessage.indexOf('…')) + "" + bodyMessage.replace('…','').split(/\r?\n/)[0];
             console.log("headerMessage inside if is " + headerMessage)
-            bodyMessage = bodyMessage.replace(bodyMessage.replace('...','').split(/\r?\n/)[0],'')
+            bodyMessage = bodyMessage.replace(bodyMessage.replace('…','').split(/\r?\n/)[0],'')
             console.log("bodyMessage inside if is " + bodyMessage)
         }
 
-        console.log(commitMessage.repository.pullRequest.mergeCommit + '/n/n' + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
+        console.log(JSON.stringify(commitMessage.repository.pullRequest.mergeCommit) + '/n' + commitMessage.repository.pullRequest.mergeCommit.messageHeadline)
+
         const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
             repo: repoDetails.repoName,
             owner: repoDetails.repoOwner,
