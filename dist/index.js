@@ -9806,13 +9806,9 @@ const start = async () => {
         if (headerMessage.length > 69) {
             headerMessage = headerMessage + " " + bodyMessage.split(/\r?\n/)[0];
             console.log("Header message BEFORE the trim and replace " + headerMessage);
-            headerMessage = headerMessage.trim().replace('...', '').replace('…', '');
+            headerMessage = headerMessage.trim().replace(new RegExp("…", "g"), '');
             console.log("Header message AFTER the trim and replace " + headerMessage);
-            console.log("Does Header Message contain ... " + headerMessage.includes("..."));
-            console.log("Does Header Message contain ... " + headerMessage.includes('...'));
-            console.log("Does Header Message contain … " + headerMessage.includes("…"));
-            console.log("Does Header Message contain … " + headerMessage.includes('…'));
-            bodyMessage = bodyMessage.replace(bodyMessage.replace('…', '').split(/\r?\n/)[0], '');
+            bodyMessage = bodyMessage.replace(bodyMessage.replace(new RegExp("…", "g"), '').split(/\r?\n/)[0], '');
             console.log("bodyMessage inside if is " + bodyMessage);
         }
         console.log(JSON.stringify(commitMessage.repository.pullRequest.mergeCommit) + '/n' + commitMessage.repository.pullRequest.mergeCommit.messageHeadline);
