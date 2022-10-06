@@ -9887,9 +9887,10 @@ const start = async () => {
                 sha: fileSha,
                 content: updatedFileContent
             });
-            core.setOutput('next_version', nextReleaseTag);
             // console.log('changelogResult', changelogResult)
         }
+        console.log("Next version outputed is ", nextReleaseTag);
+        core.setOutput('next_version', nextReleaseTag);
     }
     catch (error) {
         core.setFailed(error.message);
