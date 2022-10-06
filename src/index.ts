@@ -125,6 +125,7 @@ const start = async () => {
                 sha: fileSha,
                 content: updatedFileContent   
             })
+            core.setOutput('next_version', nextReleaseTag)
                   
             // console.log('changelogResult', changelogResult)
             
