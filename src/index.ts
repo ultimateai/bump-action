@@ -124,11 +124,11 @@ const start = async () => {
                 branch: "main",
                 sha: fileSha,
                 content: updatedFileContent   
-            })
-                  
+            })    
             // console.log('changelogResult', changelogResult)
-            
-        }
+            }
+            console.log("Next version outputed is ", nextReleaseTag)
+            core.setOutput('next_version', nextReleaseTag)
     } catch (error: any) {
         core.setFailed(error.message);
     }
