@@ -105,7 +105,7 @@ const start = async () => {
                 core.setFailed("Your update_file does not exist or it's not supported.");
             }       
         }
-        if(core.getInput('changelog')){
+        if(core.getInput('changelog') && core.getInput('changelog') == "true"){
             console.log("Input file to be modified is " + repoDetails.changelogFile)
             const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
