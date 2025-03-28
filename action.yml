@@ -34,5 +34,5 @@ outputs:
   next_version: # id of output
     description: 'The next version name (including the prefix)'
 runs:
-  using: 'node22'
+  using: 'node20'
   main: 'dist/index.js'
