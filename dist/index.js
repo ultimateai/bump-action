@@ -9946,6 +9946,7 @@ const repoDetails = {
 const start = async () => {
     try {
         const octokit = github.getOctokit(core.getInput('github_token'));
+        const createRelease = core.getInput('create_release') === 'true';
         const commitMessage = await octokit.graphql(commitMessageQuery, {
             ...repoDetails,
             prNumber: github.context.payload.pull_request?.number
@@ -9969,18 +9970,23 @@ const start = async () => {
             headerMessage = headerMessage.trim().replace(new RegExp("…", "g"), '');
             bodyMessage = bodyMessage.replace(bodyMessage.split(/\r?\n/)[0], '').replace(new RegExp("…", "g"), '');
         }
-        const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
-            repo: repoDetails.repoName,
-            owner: repoDetails.repoOwner,
-            tag_name: nextReleaseTag,
-            target_commitish: 'main',
-            name: headerMessage,
-            body: bodyMessage,
-            draft: false,
-            prerelease: false,
-            generate_release_notes: true
-        });
-        console.log('releaseResult', releaseResult);
+        if (createRelease) {
+            const releaseResult = await octokit.request('POST /repos/{owner}/{repo}/releases', {
+                repo: repoDetails.repoName,
+                owner: repoDetails.repoOwner,
+                tag_name: nextReleaseTag,
+                target_commitish: 'main',
+                name: headerMessage,
+                body: bodyMessage,
+                draft: false,
+                prerelease: false,
+                generate_release_notes: true
+            });
+            console.log('releaseResult', releaseResult);
+        }
+        else {
+            console.log(`Skipping GitHub release creation for tag: ${nextReleaseTag} (create_release=false)`);
+        }
         if (core.getInput('update_file')) {
             console.log("Input file to be modified is " + core.getInput('update_file'));
             if (core.getInput('update_file') == "package.json") {
