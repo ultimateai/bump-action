@@ -25,10 +25,14 @@ inputs:
     description: 'In case no release is present in the repo, which one should be the base release from which to bump - defaults to 0.0.0'
     required: false
     default: '0.0.0'
+  create_release:
+    description: 'Should release be created, or not? Defaults to true'
+    required: false
+    default: true
 
 outputs:
   next_version: # id of output
     description: 'The next version name (including the prefix)'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
