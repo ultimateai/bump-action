@@ -20,6 +20,7 @@ const start = async () => {
     try {
         const octokit = github.getOctokit(core.getInput('github_token'))
         const createRelease = core.getInput('create_release') === 'true';
+        const targetBranch = github.context.payload.pull_request?.base?.ref || 'main'
         
 
         const commitMessage: CommitMessageQueryResponse = await octokit.graphql(commitMessageQuery, {
@@ -54,7 +55,7 @@ const start = async () => {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
                 tag_name: nextReleaseTag,
-                target_commitish: 'main',
+                target_commitish: targetBranch,
                 name: headerMessage,
                 body: bodyMessage,
                 draft: false,
@@ -72,7 +73,7 @@ const start = async () => {
                 const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
-                branch: "main"
+                branch: targetBranch
             })
                 const fileSha = fileToUpdate.data.sha
                 var updatedFileContent
@@ -83,7 +84,7 @@ const start = async () => {
                     repo: repoDetails.repoName,
                     owner: repoDetails.repoOwner,
                     message: `Automatic ${core.getInput('update_file')} bump to ${nextReleaseTag}`,
-                    branch: "main",
+                    branch: targetBranch,
                     sha: fileSha,
                     content: updatedFileContent
                 })
@@ -93,7 +94,7 @@ const start = async () => {
                 const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${core.getInput('update_file')}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
-                branch: "main"
+                branch: targetBranch
                 })
                 const fileSha = fileToUpdate.data.sha
                 var updatedFileContent
@@ -102,7 +103,7 @@ const start = async () => {
                     repo: repoDetails.repoName,
                     owner: repoDetails.repoOwner,
                     message: `Automatic ${core.getInput('update_file')} bump to ${nextReleaseTag}`,
-                    branch: "main",
+                    branch: targetBranch,
                     sha: fileSha,
                     content: updatedFileContent
                 })
@@ -116,7 +117,7 @@ const start = async () => {
             const fileToUpdate = await octokit.request(`GET /repos/{owner}/{repo}/contents/${repoDetails.changelogFile}`, {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
-                branch: "main"
+                branch: targetBranch
             })
             const fileSha = fileToUpdate.data.sha
             const fileContent = Base64.decode(fileToUpdate.data.content)
@@ -127,7 +128,7 @@ const start = async () => {
                 repo: repoDetails.repoName,
                 owner: repoDetails.repoOwner,
                 message: `Automatic bump of ${repoDetails.changelogFile}`,
-                branch: "main",
+                branch: targetBranch,
                 sha: fileSha,
                 content: updatedFileContent   
             })    
