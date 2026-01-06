@@ -9,14 +9,14 @@ jobs:
   bump-release:
     name: Bump release
     if: github.event.pull_request.merged == true
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
       - name: Bump version and release
-        uses: ultimateai/bump-action@v0.5.4
+        uses: ultimateai/bump-action@v0.6.0
         with:
           github_token: ${{ secrets.ULTIMATE_GITHUB_PAT }}
           infer_bump_from_commit: true
